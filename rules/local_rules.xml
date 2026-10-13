@@ -1,0 +1,65 @@
+<!--
+  Reglas propias · Home SOC Wazuh Lab · Ignacio Sánchez Alós
+  Ruta en el manager: /var/ossec/etc/rules/local_rules.xml
+  Rango de IDs propios: 100000-120000
+-->
+
+<group name="local,homesoc,">
+
+  <!-- ===== Escenario 01 · Fuerza bruta SSH ===== -->
+  <!-- 5760 = "sshd: authentication failed" (regla nativa de Wazuh) -->
+  <rule id="100010" level="10" frequency="8" timeframe="120">
+    <if_matched_sid>5760</if_matched_sid>
+    <same_source_ip />
+    <description>HomeSOC: posible fuerza bruta SSH desde $(srcip) (8+ fallos en 2 min)</description>
+    <mitre>
+      <id>T1110.001</id>
+    </mitre>
+    <group>authentication_failures,bruteforce,</group>
+  </rule>
+
+  <!-- Login correcto desde una IP que acaba de disparar la regla de fuerza bruta -->
+  <rule id="100011" level="13" timeframe="300">
+    <if_sid>5715</if_sid>
+    <if_matched_sid>100010</if_matched_sid>
+    <same_source_ip />
+    <description>HomeSOC: login SSH correcto tras fuerza bruta desde $(srcip) – posible compromiso</description>
+    <mitre>
+      <id>T1110.001</id>
+      <id>T1078</id>
+    </mitre>
+    <group>authentication_success,bruteforce,</group>
+  </rule>
+
+  <!-- ===== Escenario 02 · Escaneo de puertos ===== -->
+  <rule id="100100" level="3">
+    <decoded_as>iptables-scan</decoded_as>
+    <description>HomeSOC: conexión registrada desde $(srcip) al puerto $(dstport)/$(protocol)</description>
+    <group>firewall,</group>
+  </rule>
+
+  <rule id="100101" level="10" frequency="15" timeframe="20">
+    <if_matched_sid>100100</if_matched_sid>
+    <same_source_ip />
+    <different_dstport />
+    <description>HomeSOC: escaneo de puertos desde $(srcip) (15+ puertos distintos en 20 s)</description>
+    <mitre>
+      <id>T1046</id>
+    </mitre>
+    <group>recon,portscan,</group>
+  </rule>
+
+  <!-- ===== Escenario 03 · Integridad de /etc/passwd (FIM) ===== -->
+  <!-- 550 = checksum cambiado, 554 = fichero añadido -->
+  <rule id="100200" level="12">
+    <if_sid>550,554</if_sid>
+    <field name="file">^/etc/passwd$</field>
+    <description>HomeSOC: modificación de /etc/passwd – posible creación o alteración de cuentas</description>
+    <mitre>
+      <id>T1136.001</id>
+      <id>T1098</id>
+    </mitre>
+    <group>syscheck,account_changed,</group>
+  </rule>
+
+</group>

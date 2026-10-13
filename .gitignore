@@ -1,0 +1,17 @@
+# Imágenes de VMs y discos (nunca al repo)
+*.ova
+*.ovf
+*.vdi
+*.vmdk
+*.iso
+
+# Credenciales y secretos
+*.key
+*.pem
+.env
+credenciales*
+
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store
