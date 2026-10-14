@@ -41,7 +41,7 @@ Todas las VMs corren en VirtualBox en una red **host-only aislada**: ningún ata
 - [x] Agente Wazuh conectado en la víctima (192.168.56.20)
 - [x] Incidente 01 – Fuerza bruta SSH detectado y documentado ([informe](reports/INC-01-fuerza-bruta-ssh.md))
 - [ ] Incidente 02 – Escaneo de puertos detectado y documentado
-- [ ] Incidente 03 – FIM sobre `/etc/passwd` detectado y documentado
+- [x] Incidente 03 – FIM sobre `/etc/passwd` detectado y documentado ([informe](reports/INC-03-modificacion-passwd-fim.md))
 
 ## Lecciones aprendidas
 
