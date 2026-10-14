@@ -18,31 +18,19 @@
     <group>authentication_failures,bruteforce,</group>
   </rule>
 
-  <!-- Login correcto desde una IP que acaba de disparar la regla de fuerza bruta -->
-  <rule id="100011" level="13" timeframe="300">
-    <if_sid>5715</if_sid>
-    <if_matched_sid>100010</if_matched_sid>
-    <same_source_ip />
-    <description>HomeSOC: login SSH correcto tras fuerza bruta desde $(srcip) – posible compromiso</description>
-    <mitre>
-      <id>T1110.001</id>
-      <id>T1078</id>
-    </mitre>
-    <group>authentication_success,bruteforce,</group>
-  </rule>
-
   <!-- ===== Escenario 02 · Escaneo de puertos ===== -->
+  <!-- Conexión nueva registrada por iptables (decoder propio iptables-scan) -->
   <rule id="100100" level="3">
     <decoded_as>iptables-scan</decoded_as>
-    <description>HomeSOC: conexión registrada desde $(srcip) al puerto $(dstport)/$(protocol)</description>
+    <description>HomeSOC: conexión nueva desde $(srcip) al puerto $(dstport)/$(protocol)</description>
     <group>firewall,</group>
   </rule>
 
+  <!-- Muchas conexiones nuevas desde el mismo origen en poco tiempo = escaneo -->
   <rule id="100101" level="10" frequency="15" timeframe="20">
     <if_matched_sid>100100</if_matched_sid>
     <same_source_ip />
-    <different_dstport />
-    <description>HomeSOC: escaneo de puertos desde $(srcip) (15+ puertos distintos en 20 s)</description>
+    <description>HomeSOC: posible escaneo de puertos desde $(srcip) (15+ conexiones nuevas en 20 s)</description>
     <mitre>
       <id>T1046</id>
     </mitre>

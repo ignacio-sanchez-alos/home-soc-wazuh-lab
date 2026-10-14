@@ -1,20 +1,19 @@
 <!--
   Decoders propios · Home SOC Wazuh Lab · Ignacio Sánchez Alós
   Ruta en el manager: /var/ossec/etc/decoders/local_decoder.xml
+
+  Decodifica las conexiones registradas por la regla iptables LOG de la víctima
+  (prefijo "IPTABLES-SCAN: "). Ejemplo de línea en kern.log:
+    ... kernel: IPTABLES-SCAN: IN=lo OUT= MAC=... SRC=192.168.56.20 DST=192.168.56.20
+        LEN=44 ... PROTO=TCP SPT=57651 DPT=78 WINDOW=1024 RES=0x00 SYN URGP=0
 -->
 
-<!--
-  Conexiones registradas por la regla iptables LOG de la víctima (prefijo "IPTABLES-SCAN: ").
-  Ejemplo de línea:
-  kernel: [1234.56] IPTABLES-SCAN: IN=enp0s3 OUT= MAC=... SRC=192.168.56.30 DST=192.168.56.20 LEN=44 ... PROTO=TCP SPT=51234 DPT=22 ...
--->
 <decoder name="iptables-scan">
-  <program_name>^kernel</program_name>
   <prematch>IPTABLES-SCAN: </prematch>
 </decoder>
 
 <decoder name="iptables-scan-fields">
   <parent>iptables-scan</parent>
-  <regex>SRC=(\S+) DST=(\S+) \.+ PROTO=(\w+) SPT=(\d+) DPT=(\d+)</regex>
+  <pcre2>SRC=(\S+) DST=(\S+).*?PROTO=(\w+) SPT=(\d+) DPT=(\d+)</pcre2>
   <order>srcip,dstip,protocol,srcport,dstport</order>
 </decoder>
