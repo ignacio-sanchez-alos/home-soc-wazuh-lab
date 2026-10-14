@@ -14,6 +14,6 @@
 
 <decoder name="iptables-scan-fields">
   <parent>iptables-scan</parent>
-  <pcre2>SRC=(\S+) DST=(\S+).*?PROTO=(\w+) SPT=(\d+) DPT=(\d+)</pcre2>
+  <regex type="pcre2">SRC=(\S+) DST=(\S+).*?PROTO=(\w+) SPT=(\d+) DPT=(\d+)</regex>
   <order>srcip,dstip,protocol,srcport,dstport</order>
 </decoder>
