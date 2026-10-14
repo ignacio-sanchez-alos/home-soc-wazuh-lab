@@ -21,8 +21,9 @@
   <!-- ===== Escenario 02 · Escaneo de puertos ===== -->
   <!-- Conexión nueva registrada por iptables. El decoder nativo "kernel" ya
        extrae srcip/dstport/protocol; filtramos por el prefijo del LOG. -->
+  <!-- 4100 = "Firewall rules grouped" (regla padre nativa de Wazuh) -->
   <rule id="100100" level="3">
-    <decoded_as>kernel</decoded_as>
+    <if_sid>4100</if_sid>
     <match>IPTABLES-SCAN: </match>
     <description>HomeSOC: conexión nueva desde $(srcip) al puerto $(dstport)/$(protocol)</description>
     <group>firewall,</group>
