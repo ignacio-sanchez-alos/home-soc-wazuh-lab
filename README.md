@@ -13,9 +13,8 @@ Montar un mini-SOC en casa para practicar el día a día de un analista: generar
 |---|---|---|---|
 | `wazuh-manager` | SIEM: manager, indexer y dashboard | OVA oficial de Wazuh (Amazon Linux) | 192.168.56.10 |
 | `victima-ubuntu` | Endpoint monitorizado con agente Wazuh | Ubuntu Server 24.04 LTS | 192.168.56.20 |
-| `atacante-kali` | Simulación de ataques | Kali Linux | 192.168.56.30 |
 
-Todas las VMs corren en VirtualBox en una red **host-only aislada**: ningún ataque sale del laboratorio. Detalle en [docs/01-arquitectura.md](docs/01-arquitectura.md).
+Las VMs corren en VirtualBox en una red **host-only aislada** (192.168.56.0/24): ningún ataque sale del laboratorio. Los ataques se generan de forma controlada dentro de esa red. Como evolución, se puede añadir una tercera VM con **Kali Linux** como atacante dedicado. Detalle en [docs/01-arquitectura.md](docs/01-arquitectura.md).
 
 ## Escenarios de detección
 
@@ -40,7 +39,7 @@ Todas las VMs corren en VirtualBox en una red **host-only aislada**: ningún ata
 - [x] Infraestructura desplegada (servidor Wazuh + víctima Ubuntu)
 - [x] Agente Wazuh conectado en la víctima (192.168.56.20)
 - [x] Incidente 01 – Fuerza bruta SSH detectado y documentado ([informe](reports/INC-01-fuerza-bruta-ssh.md))
-- [ ] Incidente 02 – Escaneo de puertos detectado y documentado
+- [x] Incidente 02 – Escaneo de puertos detectado y documentado ([informe](reports/INC-02-escaneo-puertos.md))
 - [x] Incidente 03 – FIM sobre `/etc/passwd` detectado y documentado ([informe](reports/INC-03-modificacion-passwd-fim.md))
 
 ## Lecciones aprendidas
