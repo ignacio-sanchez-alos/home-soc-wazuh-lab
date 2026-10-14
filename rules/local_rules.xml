@@ -19,9 +19,11 @@
   </rule>
 
   <!-- ===== Escenario 02 · Escaneo de puertos ===== -->
-  <!-- Conexión nueva registrada por iptables (decoder propio iptables-scan) -->
+  <!-- Conexión nueva registrada por iptables. El decoder nativo "kernel" ya
+       extrae srcip/dstport/protocol; filtramos por el prefijo del LOG. -->
   <rule id="100100" level="3">
-    <decoded_as>iptables-scan</decoded_as>
+    <decoded_as>kernel</decoded_as>
+    <match>IPTABLES-SCAN: </match>
     <description>HomeSOC: conexión nueva desde $(srcip) al puerto $(dstport)/$(protocol)</description>
     <group>firewall,</group>
   </rule>
